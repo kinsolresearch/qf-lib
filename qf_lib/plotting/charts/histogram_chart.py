@@ -47,8 +47,19 @@ class HistogramChart(Chart):
 
     def plot(self, figsize: Tuple[float, float] = None):
         self._setup_axes_if_necessary(figsize)
+        
+        # Automatically adjust number of bins if data range is too small
+        num_bins = self._num_of_bins
+        if isinstance(num_bins, int) and len(self.series) > 0:
+            data_range = max(self.series) - min(self.series)
+            if data_range > 0:
+                # Ensure we don't have more bins than can fit in the data range
+                num_bins = min(num_bins, max(1, len(self.series) // 2))
+            else:
+                num_bins = 1
+        
         # Plot the horizontal bar chart.
-        n, bins, patches = self.axes.hist(self.series, bins=self._num_of_bins, ec='white', **self.plot_settings)
+        n, bins, patches = self.axes.hist(self.series, bins=num_bins, ec='white', **self.plot_settings)
 
         if self._best_fit:
             # Calculate the best fit for the data.

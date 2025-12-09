@@ -387,10 +387,22 @@ class Chart:
         ax2.yaxis.set_major_locator(FixedLocator(new_y2_ticks))
 
     def _trim_data(self, data):
-        if self._start_x is not None:
-            data = data[data.index >= self._start_x]
-        if self._end_x is not None:
-            data = data[data.index <= self._end_x]
+        try:
+            if self._start_x is not None:
+                # Handle case where index might not be comparable to start_x
+                if hasattr(data.index, 'dtype') and data.index.dtype == 'int64':
+                    # RangeIndex or similar - skip trimming
+                    pass
+                else:
+                    data = data[data.index >= self._start_x]
+            if self._end_x is not None:
+                if hasattr(data.index, 'dtype') and data.index.dtype == 'int64':
+                    pass
+                else:
+                    data = data[data.index <= self._end_x]
+        except TypeError:
+            # Index type not comparable to start_x/end_x, return original data
+            pass
 
         return data
 

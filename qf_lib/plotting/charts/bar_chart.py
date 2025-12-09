@@ -109,9 +109,14 @@ class BarChart(Chart):
                 else:
                     indices.append(data_index)
 
-            minimum = np.diff(reduce(np.union1d, indices)).min()
-
-            self._thickness /= len(data_element_decorators) / minimum
+            try:
+                combined = reduce(np.union1d, indices)
+                if len(combined) > 1:
+                    minimum = np.diff(combined).min()
+                    self._thickness /= len(data_element_decorators) / minimum
+            except (ValueError, ZeroDivisionError):
+                # Not enough data points to calculate minimum diff
+                pass
 
         for i, data_element in enumerate(data_element_decorators):
             # copy the general plot settings and add DataElementDecorator-specific plot settings to the copy

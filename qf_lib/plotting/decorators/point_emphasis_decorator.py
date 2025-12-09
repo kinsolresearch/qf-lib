@@ -91,9 +91,9 @@ class PointEmphasisDecorator(ChartDecorator, SimpleLegendItem):
             self._text_pos = self._calculate_text_position(chart, x, y)
             # Draw the text on the graph.
             ax.text(self._text_pos[0], self._text_pos[1], label, size=self.font_size,
-                    weight="bold", family="Arial", color=self._color)
+                    weight="bold", family="sans-serif", color=self._color)
         else:
-            ax.text(x, y, label, size=self.font_size, weight="bold", family="Arial", color=self._color)
+            ax.text(x, y, label, size=self.font_size, weight="bold", family="sans-serif", color=self._color)
 
     def _calculate_text_position(self, line_chart, x, y) -> (object, float):
         axes = line_chart.axes
